@@ -50,6 +50,38 @@ const [nlpError, setNlpError] = useState("");
 const [aiSummary, setAiSummary] = useState("");
 const [summaryLoading, setSummaryLoading] = useState(false);
 
+// ⏱ Time Optimization State
+const [optimizationSummary, setOptimizationSummary] = useState("");
+const [optimizationLoading, setOptimizationLoading] = useState(false);
+const [optimizationError, setOptimizationError] = useState("");
+
+const handleOptimizeTime = async () => {
+  if (optimizationLoading) return;
+
+  try {
+    setOptimizationLoading(true);
+    setOptimizationError("");
+    setOptimizationSummary("");
+
+    const response = await axios.post(
+      `${BACKEND_URL}/optimize-time`
+    );
+
+    setOptimizationSummary(response?.data?.summary || "No optimization generated.");
+  } catch (error) {
+    console.error("Optimization Error:", error);
+
+    const message =
+      error?.response?.data?.detail ||
+      error?.response?.data?.summary ||
+      "Schedule optimization service unavailable.";
+
+    setOptimizationError(message);
+  } finally {
+    setOptimizationLoading(false);
+  }
+};
+
 const handleGenerateSummary = async () => {
   if (summaryLoading) return;
 
@@ -494,36 +526,68 @@ const handleGenerateSummary = async () => {
         </div>
       </div>
 
-      {/* 📊 AI Project Summary */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-slate-700">
-          📊 AI Project Summary
-        </h2>
+{/* 📊 AI Project Intelligence */}
+<div className="space-y-8">
 
-        <Card>
-          <div className="flex gap-4 mb-4">
-          <button
-          onClick={handleGenerateSummary}
-          disabled={summaryLoading}
-          className={`px-5 py-2 rounded-xl ${
+  <h2 className="text-2xl font-semibold text-slate-700">
+    📊 AI Project Intelligence
+  </h2>
+
+    {/* ===================== */}
+  {/* Schedule Optimization Card */}
+  {/* ===================== */}
+  <Card>
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-lg font-semibold text-slate-700">
+        Schedule Optimization
+      </h3>
+
+      <button
+        onClick={handleOptimizeTime}
+        disabled={optimizationLoading}
+        className={`px-5 py-2 rounded-xl transition ${
+          optimizationLoading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-green-600 hover:bg-green-700 text-white"
+        }`}
+      >
+        {optimizationLoading ? "Optimizing..." : "Optimize Schedule"}
+      </button>
+    </div>
+
+    <div className="p-4 bg-green-50 rounded-xl text-sm text-gray-700 whitespace-pre-line min-h-[120px]">
+      {optimizationSummary || "AI-driven schedule optimization strategy will appear here..."}
+    </div>
+  </Card>
+
+  {/* ===================== */}
+  {/* Executive Summary Card */}
+  {/* ===================== */}
+  <Card>
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-lg font-semibold text-slate-700">
+        Executive Summary
+      </h3>
+
+      <button
+        onClick={handleGenerateSummary}
+        disabled={summaryLoading}
+        className={`px-5 py-2 rounded-xl transition ${
           summaryLoading
-           ? "bg-gray-400"
-           : "bg-indigo-600 hover:bg-indigo-700 text-white"
-          }`}
->
-          {summaryLoading ? "Generating..." : "Generate Project Summary"}
-           </button>
-            {/* <button className="bg-purple-600 text-white px-5 py-2 rounded-xl">
-              Generate Scenario Narrative
-            // </button> */}
-          </div>
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-indigo-600 hover:bg-indigo-700 text-white"
+        }`}
+      >
+        {summaryLoading ? "Generating..." : "Generate Summary"}
+      </button>
+    </div>
 
-          <div className="p-4 bg-gray-50 rounded-xl text-sm text-gray-700">
-            {aiSummary || "AI-generated project summary will appear here..."}
-          </div>
-        </Card>
-      </div>
+    <div className="p-4 bg-gray-50 rounded-xl text-sm text-gray-700 whitespace-pre-line min-h-[120px]">
+      {aiSummary || "AI-generated executive summary will appear here..."}
+    </div>
+  </Card>
 
+</div>
     </div>
 
   );

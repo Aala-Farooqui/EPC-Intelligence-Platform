@@ -10,6 +10,7 @@ from .risk_opt import generate_risk_llm_explanation
 from .schemas import RiskAnalysisRequest
 from .nlp_opt import generate_nlp_response
 from .summary_opt import generate_project_summary
+from .optimization_opt import generate_time_optimization_summary
 
 router = APIRouter()
 
@@ -173,6 +174,21 @@ def run_risk_simulation(iterations: int = 1000):
     sims = monte_carlo_simulation(list(TASKS.values()), iterations)
     stats = project_completion_stats(sims)
     return stats
+
+@router.post("/optimize-time")
+def optimize_time():
+    cp_data = compute_critical_path(
+        list(TASKS.values()),
+        list(RESOURCES.values())
+    )
+
+    summary = generate_time_optimization_summary(
+        cp_data["total_duration"],
+        cp_data["tasks_analysis"],
+        cp_data["critical_path"]
+    )
+
+    return {"summary": summary}
 
 @router.post("/generate-summary")
 def generate_summary():

@@ -47,7 +47,7 @@ def generate_risk_llm_explanation(tasks_analysis):
         "model": "gpt-4o-mini",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.5,
-        "max_tokens": 200
+        "max_tokens": 500
     }
 
     try:

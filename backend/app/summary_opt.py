@@ -35,7 +35,7 @@ def generate_project_summary(critical_path, total_duration, tasks_analysis):
         "model": "openai/gpt-4o-mini",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.4,
-        "max_tokens": 400
+        "max_tokens": 600
     }
 
     response = requests.post(

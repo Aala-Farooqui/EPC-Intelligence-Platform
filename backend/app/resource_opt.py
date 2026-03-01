@@ -77,7 +77,7 @@ def generate_llm_explanation(conflicts: List[Dict]) -> str:
         "model": "gpt-4o-mini",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.5,
-        "max_tokens": 150 
+        "max_tokens": 300 
     }
 
     try:
